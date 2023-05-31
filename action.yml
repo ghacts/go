@@ -1,0 +1,41 @@
+name: Go
+description: GitHub Actions for building and testing Go projects
+
+inputs:
+  go-version:
+    type: string
+    required: false
+    default: '1.20'
+  golang-ci-lint-version:
+    type: string
+    required: false
+    default: 'v1.52.2'
+  golang-ci-lint-args:
+    type: string
+    required: false
+    default: '--timeout=10m'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ inputs.go-version }}
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: ${{ inputs.golang-ci-lint-version }}
+        args: ${{ inputs.golang-ci-lint-args }}
+
+    - name: Build
+      run: go build -v ./...
+      shell: bash
+
+    - name: Test
+      run: go test -v ./...
+      shell: bash
