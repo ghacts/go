@@ -2,6 +2,10 @@ name: Go
 description: GitHub Actions for building and testing Go projects
 
 inputs:
+  project-path:
+    type: string
+    required: false
+    default: ''
   go-version:
     type: string
     required: false
@@ -14,6 +18,18 @@ inputs:
     type: string
     required: false
     default: '--timeout=10m'
+  skip-lint:
+    type: boolean
+    required: false
+    default: false
+  skip-build:
+    type: boolean
+    required: false
+    default: false
+  skip-test:
+    type: boolean
+    required: false
+    default: false
 
 runs:
   using: "composite"
@@ -21,21 +37,43 @@ runs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Change to project directory
+      run: cd "${{ github.action_path }}/${{ inputs.project-path }}"
+      shell: bash
+
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: ${{ inputs.go-version }}
 
     - name: Run golangci-lint
+      if: ${{ !inputs.skip-lint }}
       uses: golangci/golangci-lint-action@v3
       with:
         version: ${{ inputs.golang-ci-lint-version }}
         args: ${{ inputs.golang-ci-lint-args }}
 
+    - name: Skip running golangci-lint
+      if: ${{ inputs.skip-lint }}
+      run: echo "Skipped running golangci-lint"
+      shell: bash
+
     - name: Build
+      if: ${{ !inputs.skip-build }}
       run: go build -v ./...
       shell: bash
 
+    - name: Skip building
+      if: ${{ inputs.skip-build }}
+      run: echo "Skipped building"
+      shell: bash
+
     - name: Test
+      if: ${{ !inputs.skip-test }}
       run: go test -v ./...
+      shell: bash
+
+    - name: Skip testing
+      if: ${{ inputs.skip-test }}
+      run: echo "Skipped testing"
       shell: bash
