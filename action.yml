@@ -54,6 +54,7 @@ runs:
       uses: actions/setup-go@v4
       with:
         go-version: ${{ inputs.go-version }}
+        cache-dependency-path: ${{ env.WORKING_DIR }}/go.sum
 
     - name: Run golangci-lint
       if: inputs.skip-lint == 'false'
