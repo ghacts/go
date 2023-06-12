@@ -3,30 +3,37 @@ description: GitHub Actions for building and testing Go projects
 
 inputs:
   project-path:
+    description: The path to the project
     type: string
     required: false
     default: ''
   go-version:
+    description: The version of Go to use
     type: string
     required: false
-    default: '1.20'
+    default: 'stable'
   golang-ci-lint-version:
+    description: The version of golangci-lint to use
     type: string
     required: false
     default: 'v1.52.2'
   golang-ci-lint-args:
+    description: Additional arguments for golangci-lint
     type: string
     required: false
     default: '--timeout=10m'
   skip-lint:
+    description: Check whether to skip lint step
     type: boolean
     required: false
     default: false
   skip-build:
+    description: Check whether to skip build step
     type: boolean
     required: false
     default: false
   skip-test:
+    description: Check whether to skip test step
     type: boolean
     required: false
     default: false
@@ -34,14 +41,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Set working directory
+      env:
+        WORKING_DIR: "${{ inputs.project-path }}"
+      shell: bash
+      run: echo "WORKING_DIR=${WORKING_DIR:-.}" >> "$GITHUB_ENV"
+
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Change to project directory
-      env:
-        PROJECT_PATH: ${{ inputs.project-path }}
-      run: cd "${PROJECT_PATH}"
-      shell: bash
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -54,28 +61,29 @@ runs:
       with:
         version: ${{ inputs.golang-ci-lint-version }}
         args: ${{ inputs.golang-ci-lint-args }}
+        working-directory: ${{ env.WORKING_DIR }}
 
     - name: Skip running golangci-lint
       if: inputs.skip-lint == 'true'
-      run: echo "Skipped running golangci-lint"
       shell: bash
+      run: echo "Skipped running golangci-lint"
 
     - name: Build
       if: inputs.skip-build == 'false'
-      run: go build -v ./...
       shell: bash
+      run: cd ${WORKING_DIR} && go build -v ./...
 
     - name: Skip building
       if: inputs.skip-build == 'true'
-      run: echo "Skipped building"
       shell: bash
+      run: echo "Skipped building"
 
     - name: Test
       if: inputs.skip-test == 'false'
-      run: go test -v ./...
       shell: bash
+      run: cd ${WORKING_DIR} && go test -v ./...
 
     - name: Skip testing
       if: inputs.skip-test == 'true'
-      run: echo "Skipped testing"
       shell: bash
+      run: echo "Skipped testing"
