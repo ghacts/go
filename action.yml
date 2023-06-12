@@ -38,7 +38,9 @@ runs:
       uses: actions/checkout@v3
 
     - name: Change to project directory
-      run: cd "${{ github.action_path }}/${{ inputs.project-path }}"
+      env:
+        PROJECT_PATH: ${{ inputs.project-path }}
+      run: cd "${PROJECT_PATH}"
       shell: bash
 
     - name: Set up Go
