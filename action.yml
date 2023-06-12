@@ -71,7 +71,8 @@ runs:
     - name: Build
       if: inputs.skip-build == 'false'
       shell: bash
-      run: cd ${WORKING_DIR} && go build -v ./...
+      working-directory: ${{ env.WORKING_DIR }}
+      run: go build -v ./...
 
     - name: Skip building
       if: inputs.skip-build == 'true'
@@ -81,7 +82,8 @@ runs:
     - name: Test
       if: inputs.skip-test == 'false'
       shell: bash
-      run: cd ${WORKING_DIR} && go test -v ./...
+      working-directory: ${{ env.WORKING_DIR }}
+      run: go test -v ./...
 
     - name: Skip testing
       if: inputs.skip-test == 'true'
