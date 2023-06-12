@@ -31,26 +31,26 @@ jobs:
       - name: Test action without skipping any step
         uses: ./
         with:
-          project-path: tests/dummy_app/
+          project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
 
       - name: Test action with skipping lint
         uses: ./
         with:
-          project-path: tests/dummy_app/
+          project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
           skip-lint: true
 
       - name: Test action with skipping build
         uses: ./
         with:
-          project-path: tests/dummy_module/
+          project-path: tests/dummy_module
           go-version: ${{ matrix.go-version }}
           skip-build: true
 
       - name: Test action with skipping test
         uses: ./
         with:
-          project-path: tests/dummy_app/
+          project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
           skip-test: true
