@@ -23,6 +23,6 @@ tasks:
       VERSION: "{{.CLI_ARGS}}"
     cmds:
       - echo "Preparing release for version {{.VERSION}}"
-      - git switch -c ${RELEASE_BRANCH_PREFIX}${VERSION_TAG_PREFIX}{{.VERSION}} ${RELEASE_BASE_BRANCH}
+      - git switch -c ${RELEASE_BRANCH_PREFIX}{{.VERSION}} ${RELEASE_BASE_BRANCH}
       - task: "action:doc"
       - task release:create -- {{.VERSION}}
