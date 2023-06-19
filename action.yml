@@ -73,7 +73,7 @@ runs:
       if: inputs.skip-build == 'false'
       shell: bash
       working-directory: ${{ env.WORKING_DIR }}
-      run: go build -v ./...
+      run: go build -o outputs/ -v ./...
 
     - name: Skip building
       if: inputs.skip-build == 'true'
