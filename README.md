@@ -54,3 +54,11 @@ jobs:
           project-path: pkg/module-xyz
           go-version: ${{ matrix.go-version }}
 ```
+
+## Contact
+
+Le Minh Tri [@ansidev](https://ansidev.xyz/about).
+
+## License
+
+This source code is available under the [MIT LICENSE](/LICENSE).
