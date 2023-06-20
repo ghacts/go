@@ -33,6 +33,7 @@ jobs:
         with:
           project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
+          artifact-name: "dummy-app-${{ matrix.os }}-go-${{ matrix.go-version }}"
 
       - name: Test action with skipping lint
         uses: ./
