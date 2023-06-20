@@ -37,6 +37,16 @@ inputs:
     type: boolean
     required: false
     default: false
+  artifact-name:
+    description: The name of the artifact to upload
+    type: string
+    required: false
+    default: 'dist'
+  output-dir:
+    description: The path to the output directory
+    type: string
+    required: false
+    default: 'dist/'
 
 runs:
   using: "composite"
@@ -71,9 +81,18 @@ runs:
 
     - name: Build
       if: inputs.skip-build == 'false'
+      env:
+        OUTPUT_DIR: ${{ inputs.output-dir }}
       shell: bash
       working-directory: ${{ env.WORKING_DIR }}
-      run: go build -o outputs/ -v ./...
+      run: go build -o ${OUTPUT_DIR} -v ./...
+
+    - name: Upload artifact
+      if: inputs.skip-build == 'false' && success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: "${{ env.WORKING_DIR }}/${{ inputs.output-dir }}"
 
     - name: Skip building
       if: inputs.skip-build == 'true'
