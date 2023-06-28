@@ -37,6 +37,10 @@ inputs:
     type: boolean
     required: false
     default: false
+  skip-upload-artifact:
+    type: boolean
+    required: false
+    default: false
   artifact-name:
     description: The name of the artifact to upload
     type: string
@@ -80,6 +84,7 @@ runs:
       run: echo "Skipped running golangci-lint"
 
     - name: Build
+      id: build
       if: inputs.skip-build == 'false'
       env:
         OUTPUT_DIR: ${{ inputs.output-dir }}
@@ -87,17 +92,22 @@ runs:
       working-directory: ${{ env.WORKING_DIR }}
       run: go build -o ${OUTPUT_DIR} -v ./...
 
+    - name: Skip building
+      if: inputs.skip-build == 'true'
+      shell: bash
+      run: echo "Skipped building"
+
     - name: Upload artifact
-      if: inputs.skip-build == 'false' && success()
+      if: inputs.skip-upload-artifact == 'false' && inputs.skip-build == 'false' && steps.build.outcome == 'success'
       uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.artifact-name }}
         path: "${{ env.WORKING_DIR }}/${{ inputs.output-dir }}"
 
-    - name: Skip building
-      if: inputs.skip-build == 'true'
+    - name: Skip uploading artifact
+      if: inputs.skip-upload-artifact == 'true' || inputs.skip-build == 'true' && steps.build.outcome != 'success'
       shell: bash
-      run: echo "Skipped building"
+      run: echo "Skipped uploading artifact"
 
     - name: Test
       if: inputs.skip-test == 'false'
