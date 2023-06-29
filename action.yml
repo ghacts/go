@@ -51,6 +51,11 @@ inputs:
     type: string
     required: false
     default: 'dist'
+  artifact-retention-days:
+    description: The retention days of the artifact
+    type: string
+    required: false
+    default: 0
   output-dir:
     description: The path to the output directory
     type: string
@@ -111,6 +116,7 @@ runs:
       with:
         name: ${{ inputs.artifact-name }}
         path: "${{ env.WORKING_DIR }}/${{ inputs.output-dir }}"
+        retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Skip uploading artifact
       if: inputs.skip-upload-artifact == 'true' || inputs.skip-build == 'true' && steps.build.outcome != 'success'
