@@ -32,6 +32,11 @@ inputs:
     type: boolean
     required: false
     default: false
+  build-command:
+    description: The command to run to build the project
+    type: string
+    required: false
+    default: 'go build -o {{OUTPUT_DIR}} -v ./...'
   skip-test:
     description: Check whether to skip test step
     type: boolean
@@ -88,9 +93,12 @@ runs:
       if: inputs.skip-build == 'false'
       env:
         OUTPUT_DIR: ${{ inputs.output-dir }}
+        BUILD_COMMAND: ${{ inputs.build-command }}
       shell: bash
       working-directory: ${{ env.WORKING_DIR }}
-      run: go build -o ${OUTPUT_DIR} -v ./...
+      run: |
+        BUILD_CMD="${BUILD_COMMAND//"{{OUTPUT_DIR}}"/${OUTPUT_DIR}}"
+        eval ${BUILD_CMD}
 
     - name: Skip building
       if: inputs.skip-build == 'true'
