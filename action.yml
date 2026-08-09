@@ -4,63 +4,52 @@ description: GitHub Actions for building and testing Go projects
 inputs:
   project-path:
     description: The path to the project
-    type: string
     required: false
-    default: ''
+    default: ""
   go-version:
     description: The version of Go to use
-    type: string
     required: false
-    default: 'stable'
+    default: "stable"
   golang-ci-lint-version:
     description: The version of golangci-lint to use
-    type: string
     required: false
-    default: 'latest'
+    default: "latest"
   golang-ci-lint-args:
     description: Additional arguments for golangci-lint
-    type: string
     required: false
-    default: '--timeout=10m'
+    default: "--timeout=10m"
   skip-lint:
     description: Check whether to skip lint step
-    type: boolean
     required: false
-    default: false
+    default: "false"
   skip-build:
     description: Check whether to skip build step
-    type: boolean
     required: false
-    default: false
+    default: "false"
   build-command:
     description: The command to run to build the project
-    type: string
     required: false
-    default: 'go build -o {{OUTPUT_DIR}} -v ./...'
+    default: "go build -o {{OUTPUT_DIR}} -v ./..."
   skip-test:
     description: Check whether to skip test step
-    type: boolean
     required: false
-    default: false
+    default: "false"
   skip-upload-artifact:
-    type: boolean
+    description: Check whether to skip uploading artifact step
     required: false
-    default: false
+    default: "false"
   artifact-name:
     description: The name of the artifact to upload
-    type: string
     required: false
-    default: 'dist'
+    default: "dist"
   artifact-retention-days:
     description: The retention days of the artifact
-    type: string
     required: false
-    default: 0
+    default: "0"
   output-dir:
     description: The path to the output directory
-    type: string
     required: false
-    default: 'dist/'
+    default: "dist/"
 
 runs:
   using: "composite"
@@ -135,5 +124,5 @@ runs:
       run: echo "Skipped testing"
 
 branding:
-  icon: 'box'
-  color: 'green'
+  icon: "box"
+  color: "green"
