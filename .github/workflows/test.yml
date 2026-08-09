@@ -33,7 +33,7 @@ jobs:
         with:
           project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
-          artifact-name: "dummy-app-${{ matrix.os }}-go-${{ matrix.go-version }}"
+          artifact-name: "dummy-app-${{ matrix.os }}-go-${{ matrix.go-version }}-no-skip"
 
       - name: Test action with skipping lint
         uses: ./
@@ -41,6 +41,7 @@ jobs:
           project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
           skip-lint: true
+          artifact-name: "dummy-app-${{ matrix.os }}-go-${{ matrix.go-version }}-skip-lint"
 
       - name: Test action with skipping build
         uses: ./
@@ -48,6 +49,7 @@ jobs:
           project-path: tests/dummy_module
           go-version: ${{ matrix.go-version }}
           skip-build: true
+          artifact-name: "dummy-module-${{ matrix.os }}-go-${{ matrix.go-version }}-skip-build"
 
       - name: Test action with skipping test
         uses: ./
@@ -55,3 +57,4 @@ jobs:
           project-path: tests/dummy_app
           go-version: ${{ matrix.go-version }}
           skip-test: true
+          artifact-name: "dummy-app-${{ matrix.os }}-go-${{ matrix.go-version }}-skip-test"
