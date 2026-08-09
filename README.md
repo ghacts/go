@@ -45,10 +45,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Build and test
-        uses: ghacts/go@v1
+        uses: ghacts/go@main
         with:
           # don't need to pass this parameter if project directory is under root
           project-path: pkg/module-xyz
